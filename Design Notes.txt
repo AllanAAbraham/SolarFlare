@@ -1,21 +1,28 @@
-create solarPanel object 
--> properties:
-name (string)
-capacity kw (double)
-address (string)
-city (string)
-state (string)
-zip (string)
-
+FILE STRUCTURE
+- ISolarPowerService interface -> methods 
+- SolarPowerservice implements ISolarPowerService "backend" file -> hashmap, api calls these methods to access Map
+- SolarPowerController "endpoint" file -> contains get endpoints
+- SolarPower "object" class -> solar power object:
+    -> properties:
+        name (string)
+        capacity kw (double)
+        address (string)
+        city (string)
+        state (string)
+        zip (string)
 
 When localhost is run, first thing that should happen is
-opening projects.json -> if file not found or is empty -> throw error and terminate application
-else create a HashMap (Dict) where key is id (int) value is solarPanel object
-run through entire json doc, creating new solarPanel object when new key is found and adding both 
+
+FUNCTIONALITY
+- opening projects.json 
+- create a HashMap (Dict) where key is id (int) value is solarPanel object
+- run through entire json doc, creating new solarPanel object when new key is found and adding both 
 key : solarPanel_id object to the hashMap
-if any property is empty in json -> add "unavailable" string to that property in the object 
+- if any property is empty in json -> add "unavailable" string to that property in the object 
 { could throw error instead in future }
 
+WHEN TO THROW ERROR:
+- if file not found or is empty -> throw error and terminate application
 
 Query Strings to trigger Get endpoints
 Return from endpoints will be json
@@ -24,19 +31,26 @@ GET
 Routing: localhost /solarpanels/info&id=(string_id)
 1) Get basic info about a solar farm by id (name, capacity, city, state, etc.)
 
-throw http error if id not specified or id is not number
-search HashMap with id
-return json version of solarPanel_id 
-else throw "id not found" some http error
+FUNCTIONALITY: 
+- search HashMap with id
+- return json version of solarPanel_id 
+
+WHEN TO THROW ERROR:
+- throw http error if id not specified or id is not number
+- else throw "id not found" some http error
 
 
 GET
 Routing: localhost /solarpanels/info&state=(string_state)
 2) Get a list of solar farms in a given state (MA, NY, RI)
 
-throw http error if state not specified or if input is not in Set of state abbreviations
-iterate through hashMap_keys and HashMap_values, build a list of objects when input_state == solarPanel_State
-return json version of list
+FUNCTIONALITY: 
+- iterate through hashMap_keys and HashMap_values
+- build a list of objects when input_state == solarPanel_State
+- return json version of list
+
+WHEN TO THROW ERROR:
+- throw http error if state not specified or if input is not in Set of state abbreviations
 
 
 GET
@@ -44,10 +58,15 @@ Routing: localhost /solarpanels/info&minCap=(string)&maxCap=(string)
 3)Given a capacity range (minimum capacity and maximum capacity) return a list of solar farms 
 with capacity within the specified range (ex. 100kw - 500kW)
 
-if min or max capacity not specified, default to 100kw and 500kw respectively, if capacities specified are not number, throw http error
-iterate through hashMap_keys and HashMap_values, build a list of objects when minCap<=solarPanel_capacity<=maxCap
-return json version of list
-return json containing ("No solar panel system found within given range of capacity") if none is within range
+FUNCTIONALITY: 
+- if min or max capacity not specified, default to 100kw and 500kw respectively
+- iterate through hashMap_keys and HashMap_values
+- build a list of objects when minCap<=solarPanel_capacity<=maxCap
+- return json version of list or
+- return json containing ("No solar panel system found within given range of capacity") if none is within range
+
+WHEN TO THROW ERROR:
+- if capacities specified are not number, throw http error
 
 
 GET
@@ -55,35 +74,32 @@ Routing: localhost /solarpanels/month&id=(string)
 4) Given a solar farm id, return the month in which it generated the most energy (generated 
 energy is in the `total` column of the project's generation data file
 
-throw http error is input is not a number
-concatenate id to '_data.csv' like `{farm_id}_data.csv`
+FUNCTIONALITY: 
+- concatenate id to '_data.csv' like `{farm_id}_data.csv`
+- open file path this/generation_data/`{farm_id}_data.csv`
+- csv is formatted:
+  row 1 is ts column, total column
+  ts is format of 2018-01-01T00:00:00
+  need to parse month and year out 
+   double for total column numbers
+- method needs to first parse out the month and year
+- iterate through ts and retrieve corresponding total value
+- (if no total value given but there is a ts for that row, add use 0 instead)
+- sum of all rows where month and year is same
+- insert into hashMap key = year-month (string),  value = sumation
+- iterate through entire ts and total column and rows filling in hashMap
+- iterate through hashmap create a list of keys where sum = max in case situation where instances of multiple max sums
+- turn list of keys into list of touples (or do it in 1 step above in format of (month, year)  (max_keys)
+   have a map of key: month_num, value: ("name_of_month")
+- if len of max_keys = 1: create string "The month where Solar Panel System (ID) generated most energy is
+  (month_map[touple_month), (touple_year)."
+-if len of max_keys > 1
+   iterate max_keys through max_keys and build string:
+   (month_map[touple_month_1), (touple_year_1), (month_map[touple_month_2), (touple_year_2), etc
+   create string " The months where Solar Panel System (ID) generated most energy are: " + concatenate above string
 
-open file path this/generation_data/`{farm_id}_data.csv`
-if file not found throw http error
-csv is formatted:
-row 1 is ts column, total column
-ts is format of 2018-01-01T00:00:00
-need to parse month out 
-double for total column numbers
-method needs to first parse out the month and year
-iterate through ts and retrieve corresponding total value
-(if no total value given but there is a ts for that row, add use 0 instead)
-sum of all rows where month and year is same
-insert into hashMap key = year-month (string),  value = sumation
-iterate through entire ts and total column and rows filling in hashMap
+- return as plain text or in json
 
-iterate through hashmap create a list of keys where sum = max in case situation where instances of multiple max sums
-turn list of keys into list of touples (or do it in 1 step above in format of (month, year)  (max_keys)
-have a map of key: month_num, value: ("name_of_month")
-
-if len of max_keys = 1: create string "The month where Solar Panel System (ID) generated most energy is
-(month_map[touple_month), (touple_year)."
-
-
-if len of max_keys > 1
-iterate max_keys through max_keys and build string:
-(month_map[touple_month_1), (touple_year_1), (month_map[touple_month_2), (touple_year_2), etc
-
-create string " The months where Solar Panel System (ID) generated most energy are: " + concatenate above string
-
-return as plain text or in json
+WHEN TO THROW ERROR:
+- throw http error is input is not a number
+- if file not found throw http error
