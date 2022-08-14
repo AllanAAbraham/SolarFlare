@@ -9,28 +9,28 @@ class SolarPower:
         self.__zip = zip
 
     @property
-    def Name(self):
+    def Name(self) -> str:
         return self.__name
     
     @property
-    def Capacity(self):
+    def Capacity(self) -> float:
         return self.__capacity
 
     @property
-    def Address(self):
+    def Address(self) -> str:
         return self.__address
 
     @property
-    def City(self):
+    def City(self) -> str:
         return self.__city
 
     @property
-    def State(self):
+    def State(self) -> str:
         return self.__state
 
     @property
-    def Zip(self):
+    def Zip(self) -> str:
         return self.__zip
 
-    def asdict(self):
+    def asdict(self) -> str:
         return {"name": self.__name, "capacity": self.__capacity, "address": self.__address, "city": self.__city, "state": self.__state, "zip": self.__zip}
