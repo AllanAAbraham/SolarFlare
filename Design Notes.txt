@@ -28,7 +28,7 @@ Query Strings to trigger Get endpoints
 Return from endpoints will be json
 
 GET
-Routing: localhost /solarpanels/info&id=(string_id)
+Routing: localhost /SolarFlare/info?id=(string_id)
 1) Get basic info about a solar farm by id (name, capacity, city, state, etc.)
 
 FUNCTIONALITY: 
@@ -41,7 +41,7 @@ WHEN TO THROW ERROR:
 
 
 GET
-Routing: localhost /solarpanels/info&state=(string_state)
+Routing: localhost /SolarFlare/info?state=(string_state)
 2) Get a list of solar farms in a given state (MA, NY, RI)
 
 FUNCTIONALITY: 
@@ -54,7 +54,7 @@ WHEN TO THROW ERROR:
 
 
 GET
-Routing: localhost /solarpanels/info&minCap=(string)&maxCap=(string)
+Routing: localhost /SolarFlare/info?minCap=(string)&maxCap=(string)
 3)Given a capacity range (minimum capacity and maximum capacity) return a list of solar farms 
 with capacity within the specified range (ex. 100kw - 500kW)
 
@@ -70,7 +70,7 @@ WHEN TO THROW ERROR:
 
 
 GET
-Routing: localhost /solarpanels/month&id=(string)
+Routing: localhost /SolarFlare/month?id=(string)
 4) Given a solar farm id, return the month in which it generated the most energy (generated 
 energy is in the `total` column of the project's generation data file
 

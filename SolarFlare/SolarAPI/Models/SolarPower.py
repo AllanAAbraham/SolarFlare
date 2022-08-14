@@ -31,3 +31,6 @@ class SolarPower:
     @property
     def Zip(self):
         return self.__zip
+
+    def asdict(self):
+        return {"name": self.__name, "capacity": self.__capacity, "address": self.__address, "city": self.__city, "state": self.__state, "zip": self.__zip}
