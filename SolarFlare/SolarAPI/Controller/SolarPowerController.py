@@ -5,6 +5,7 @@ from django.http import HttpResponseBadRequest
 from SolarAPI.Services.SolarPowerService import *
 from SolarAPI.Services.JSONService import *
 
+
 states = { 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
            'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
            'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
@@ -25,9 +26,8 @@ def getSolarPowerInfo(request):
             try:
 
                 SolarPanels = getSolarPanelByID(int(query["id"]))
-                SolarJson = SolarPowerToJson(SolarPanels)
                 
-                return HttpResponse(SolarJson)
+                return HttpResponse(SolarPowerToJson(SolarPanels))
         
             except KeyError:
                 return HttpResponseBadRequest("Invalid ID Provided")
@@ -43,8 +43,8 @@ def getSolarPowerInfo(request):
             try:
 
                 SolarMap = getSolarPanelByState(query["state"].upper())
-                SolarJson = SolarPowerToJson(SolarMap)
-                return HttpResponse(SolarJson)
+                
+                return HttpResponse(SolarPowerToJson(SolarMap))
 
             except KeyError:
                 return HttpResponseBadRequest("Invalid State Provided")
@@ -61,8 +61,8 @@ def getSolarPowerInfo(request):
             try:
 
                 SolarMap = getSolarPanelByRange(query["minCap"], query["maxCap"])
-                SolarJson = SolarPowerToJson(SolarMap)
-                return HttpResponse(SolarJson)
+                
+                return HttpResponse(SolarPowerToJson(SolarMap))
 
             except ValueError:
                 return HttpResponseBadRequest("Invalid minimum and maximum capacities provided")
