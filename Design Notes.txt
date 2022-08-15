@@ -1,5 +1,5 @@
 FILE STRUCTURE
-- ISolarPowerService interface -> methods 
+- ASolarPowerService Abstract -> methods 
 - SolarPowerservice implements ISolarPowerService "backend" file -> hashmap, api calls these methods to access Map
 - SolarPowerController "endpoint" file -> contains get endpoints
 - SolarPower "object" class -> solar power object:
@@ -10,6 +10,7 @@ FILE STRUCTURE
         city (string)
         state (string)
         zip (string)
+- JSONService class -> takes variety of inputs and returns json 
 
 When localhost is run, first thing that should happen is
 

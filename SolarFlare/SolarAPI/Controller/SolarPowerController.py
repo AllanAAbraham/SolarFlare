@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from SolarAPI.Services.SolarPowerService import *
 from SolarAPI.Services.JSONService import *
-import json
 
 states = { 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
            'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
@@ -12,10 +11,13 @@ states = { 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA',
            'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX',
            'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY'}
 
+#made 1 get method so that I could use the same URL but with different query string parameters
 def getSolarPowerInfo(request):
-    
+
+    #Maps query string parameters as key and value in the dictionary
     query = request.GET.dict()
-    
+
+    # checking if only 1 querystring parameter and if it is id
     if "id" in query and len(query.keys()) == 1:
 
         if query["id"].isdigit():
@@ -26,14 +28,14 @@ def getSolarPowerInfo(request):
                 SolarJson = SolarPowerToJson(SolarPanels)
                 
                 return HttpResponse(SolarJson)
-                #return HttpResponse("<h1> {}</h1>".format(SolarPanels.asdict()))
-
+        
             except KeyError:
                 return HttpResponseBadRequest("Invalid ID Provided")
 
         else:
             return HttpResponseBadRequest("Invalid ID Provided")
 
+    # checking if only 1 querystring parameter and if it is state
     elif "state" in query and len(query.keys()) == 1:
 
         if query["state"].isalpha() and query["state"].upper() in states:
@@ -51,6 +53,7 @@ def getSolarPowerInfo(request):
 
             return HttpResponseBadRequest("Invalid State provided")
 
+    # checking if only 2 querystring parameter and if it is minCap and MaxCap
     elif len(query.keys()) == 2 and "minCap" in query and "maxCap" in query:
 
         if query["minCap"].isdigit() and query["maxCap"].isdigit():
@@ -70,7 +73,7 @@ def getSolarPowerInfo(request):
 
         return HttpResponseBadRequest("Invalid Parameters Provided")
 
-
+# I used a different url for this GET so I used a different method
 def getSolarPowerMaxMonth(request):
 
     query = request.GET.dict()
@@ -82,10 +85,7 @@ def getSolarPowerMaxMonth(request):
             try:
 
                 SolarPanelMaxGenMonByID = getSolarPanelMaxMonth(int(query["id"]))
-                if (type(SolarPanelMaxGenMonByID) is dict):
-                    return HttpResponse(json.dumps(SolarPanelMaxGenMonByID))
-                else:
-                    return HttpResponse(SolarPanelMaxGenMonByID)
+                return HttpResponse(SolarPowerToJson(SolarPanelMaxGenMonByID))
                 
 
             except KeyError:

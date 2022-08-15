@@ -19,8 +19,6 @@ from SolarAPI.views import view
 from SolarAPI.Controller.SolarPowerController import *
 
 urlpatterns = [
-    #path("admin/", admin.site.urls),
-    #path("", view, name='test_view'),
     path("SolarFlare/info", getSolarPowerInfo, name='Solar_info'),
     path("SolarFlare/month", getSolarPowerMaxMonth, name='Solar_max_month'),
 ]
