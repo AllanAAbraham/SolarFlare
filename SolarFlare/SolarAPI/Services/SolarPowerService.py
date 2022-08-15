@@ -57,33 +57,42 @@ def getSolarPanelByRange(minCap:float, maxCap:float) -> dict:
 
 
 def getSolarPanelMaxMonth(id:int) -> dict:
-    
-
+    #if id in SolarMap:
+        
     if id in SolarMap:
-
+        
         PowerByMonth = {}
 
         csvFilePath = csvPath+str(id)+csvFile
+        
         #2018-01 2018-02 2018-03 2018-04 2018-05 2018-06
         try:
             with open(csvFilePath, "r") as csvfile:
                 readCSV = csv.DictReader(csvfile)
                 #counter = ""
+                
                 for row in readCSV:
                     splitDate =  str(row["ts"]).split("-")
                     dateKey = splitDate[0]+'-'+splitDate[1]
+                       
                     if dateKey in PowerByMonth:
+                        
                         #PowerByMonth[dateKey] = "updatedstuff"
                         if "total" in row:
                             PowerByMonth[dateKey] = PowerByMonth[dateKey] + float(row["total"])
                         elif "Generation Meter RM - 01" in row:
                             PowerByMonth[dateKey] = PowerByMonth[dateKey] + float(row["Generation Meter RM - 01"])
                     else:
-                        PowerByMonth[dateKey] = float(row["total"])
+                        if "total" in row:
+                            PowerByMonth[dateKey] = float(row["total"])
+                        elif "Generation Meter RM - 01" in row:
+                            PowerByMonth[dateKey] =float(row["Generation Meter RM - 01"])
+                        
                    #counter = row["ts"] +" " +row ["total"] + "\n" + counter
             
+            
             maxMonth = [key for key, value in PowerByMonth.items() if value == max(PowerByMonth.values())]
-            #return PowerByMonth
+            return PowerByMonth
             return maxMonth
 
         except FileNotFoundError:
