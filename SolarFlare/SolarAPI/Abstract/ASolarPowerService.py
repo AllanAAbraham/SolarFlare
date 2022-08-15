@@ -10,9 +10,9 @@ def getSolarPanelByState(state:str) -> dict:
     pass
 
 @abstractmethod
-def getSolarPanelByRange(minCap:float, maxCap:float):
+def getSolarPanelByRange(minCap:float, maxCap:float) -> dict:
     pass
 
 @abstractmethod
-def getSolarPanelMaxMonth(id:str):
+def getSolarPanelMaxMonth(id:int) -> dict:
     pass

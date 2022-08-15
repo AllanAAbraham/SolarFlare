@@ -81,7 +81,7 @@ def getSolarPowerMaxMonth(request):
             
             try:
 
-                SolarPanelMaxGenMonByID = getSolarPanelMaxMonth(query["id"])
+                SolarPanelMaxGenMonByID = getSolarPanelMaxMonth(int(query["id"]))
                 if (type(SolarPanelMaxGenMonByID) is dict):
                     return HttpResponse(json.dumps(SolarPanelMaxGenMonByID))
                 else:
@@ -89,7 +89,7 @@ def getSolarPowerMaxMonth(request):
                 
 
             except KeyError:
-                return HttpResponseBadRequest("Invalid ID Provided")
+                return HttpResponseBadRequest("ID not found")
             except FileNotFoundError:
                 return HttpResponseBadRequest("Generation Data File Not Found")
 

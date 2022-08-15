@@ -39,7 +39,7 @@ def getSolarPanelByState(state:str) -> dict:
     
 
 
-def getSolarPanelByRange(minCap:float, maxCap:float):
+def getSolarPanelByRange(minCap:float, maxCap:float) -> dict:
     
     SolarByCapacityMap = {}
 
@@ -56,13 +56,14 @@ def getSolarPanelByRange(minCap:float, maxCap:float):
        raise ValueError
 
 
-def getSolarPanelMaxMonth(id:str):
+def getSolarPanelMaxMonth(id:int) -> dict:
     
-    if int(id) in SolarMap:
+
+    if id in SolarMap:
 
         PowerByMonth = {}
 
-        csvFilePath = csvPath+id+csvFile
+        csvFilePath = csvPath+str(id)+csvFile
         #2018-01 2018-02 2018-03 2018-04 2018-05 2018-06
         try:
             with open(csvFilePath, "r") as csvfile:
@@ -73,7 +74,10 @@ def getSolarPanelMaxMonth(id:str):
                     dateKey = splitDate[0]+'-'+splitDate[1]
                     if dateKey in PowerByMonth:
                         #PowerByMonth[dateKey] = "updatedstuff"
-                        PowerByMonth[dateKey] = PowerByMonth[dateKey] + float(row["total"])
+                        if "total" in row:
+                            PowerByMonth[dateKey] = PowerByMonth[dateKey] + float(row["total"])
+                        elif "Generation Meter RM - 01" in row:
+                            PowerByMonth[dateKey] = PowerByMonth[dateKey] + float(row["Generation Meter RM - 01"])
                     else:
                         PowerByMonth[dateKey] = float(row["total"])
                    #counter = row["ts"] +" " +row ["total"] + "\n" + counter
