@@ -1,18 +1,20 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from SolarAPI.Models.SolarPower import SolarPower
 
-@abstractmethod
-def getSolarPanelByID(id:int) -> SolarPower:
-    pass
+class ASolarPowerService(ABC):
 
-@abstractmethod
-def getSolarPanelByState(state:str) -> dict:
-    pass
+    @abstractmethod
+    def getSolarPanelByID(id:int) -> SolarPower:
+        pass
 
-@abstractmethod
-def getSolarPanelByRange(minCap:float, maxCap:float) -> dict:
-    pass
+    @abstractmethod
+    def getSolarPanelByState(state:str) -> dict:
+        pass
 
-@abstractmethod
-def getSolarPanelMaxMonth(id:int) -> str:
-    pass
+    @abstractmethod
+    def getSolarPanelByRange(minCap:float, maxCap:float) -> dict:
+        pass
+
+    @abstractmethod
+    def getSolarPanelMaxMonth(id:int) -> str:
+        pass

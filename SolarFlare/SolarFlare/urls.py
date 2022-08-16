@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from SolarAPI.views import view
-from SolarAPI.Controller.SolarPowerController import *
+from SolarAPI.Controller.SolarPowerController import SolarPowerController
+from SolarAPI.Services.SolarPowerService import SolarPowerService
+
+solarPowerController = SolarPowerController(SolarPowerService())
 
 urlpatterns = [
-    path("SolarFlare/info", getSolarPowerInfo, name='Solar_info'),
-    path("SolarFlare/month", getSolarPowerMaxMonth, name='Solar_max_month'),
+    path("SolarFlare/info", solarPowerController.getSolarPowerInfo, name='Solar_info'),
+    path("SolarFlare/month", solarPowerController.getSolarPowerMaxMonth, name='Solar_max_month'),
 ]
